@@ -22,10 +22,38 @@ Give your Claude Code sessions a soul. Summon famous figures — gods, scientist
 | `/character odin` | A specific figure — any name works, roster or not |
 | `/character on` | **Always-on mode**: every new session starts as a random character |
 | `/character off` | Back to plain Claude |
-| `/character shared on` | Concurrent sessions share a theme — open three terminals, get three Norse gods |
-| `/character shared off` | Every session rolls independently |
+| `/character shared theme on` | Concurrent sessions share a theme — open three terminals, get three Norse gods |
+| `/character shared character on` | Concurrent sessions are the exact same character — three terminals, three Odins |
+| `/character shared ... off` | Every session rolls independently again |
 
-Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`. Settings live in `~/.claude/masquerade.conf` (`enabled=true`, `shared_theme=true`), editable by hand too.
+Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`. See [Configuration](#configuration) for all settings.
+
+## Configuration
+
+All settings live in one plain-text file: **`~/.claude/masquerade.conf`** — one `key=value` per line, no quotes, anything but `true` counts as false. Edit it by hand, script it, or let the `/character` commands write it for you. Missing file = plugin fully dormant.
+
+```ini
+# ~/.claude/masquerade.conf
+enabled=true
+shared_theme=true
+shared_character=false
+```
+
+| Key | Values | Default | Meaning |
+|---|---|---|---|
+| `enabled` | `true`/`false` | `false` | Master switch. When `true`, the SessionStart hook gives **every new session** a random character. When `false` (or the file is missing), the hook exits silently — `/character` still works on demand. |
+| `shared_theme` | `true`/`false` | `false` | While more than one claude process is running, new sessions keep the **theme** of the first one but roll their own character within it (three terminals → three different Norse gods). When the last claude process exits, the next session rerolls the theme. |
+| `shared_character` | `true`/`false` | `false` | Stronger version: concurrent sessions are the **exact same character** (three terminals → three Odins). Takes precedence over `shared_theme`, so setting both is fine. |
+
+Command ↔ config mapping, if you'd rather not touch the file:
+
+| Command | Writes |
+|---|---|
+| `/character on` / `off` | `enabled=true` / `false` |
+| `/character shared theme on` / `off` | `shared_theme=true` / `false` |
+| `/character shared character on` / `off` | `shared_character=true` / `false` |
+
+**State file:** shared modes remember the current pick in `~/.claude/masquerade-pick` (`theme<TAB>name`). It's managed automatically; delete it any time to force a fresh roll. **Note:** "concurrent" is detected by counting running `claude` processes, so the shared pick resets whenever no session is left running.
 
 ## The roster
 
@@ -39,4 +67,4 @@ Copy [`characters/TEMPLATE.md`](characters/TEMPLATE.md) to `characters/<name-wit
 
 - `/character` is a plugin skill that reads the roster and adopts the persona.
 - Always-on mode is a `SessionStart` hook that injects the persona when `enabled=true` in `~/.claude/masquerade.conf` — and exits silently otherwise.
-- Shared-theme mode stores the current theme in `~/.claude/masquerade-theme` and reuses it while other claude processes are running; when the last one exits, the next session rerolls the theme.
+- Shared modes store the current pick in `~/.claude/masquerade-pick` and reuse it while other claude processes are running; when the last one exits, the next session rerolls.

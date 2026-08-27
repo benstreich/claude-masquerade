@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # SessionStart hook: dresses the session as a random character from the roster.
 # Config: ~/.claude/masquerade.conf, key=value lines:
-#   enabled=true        # all new sessions become characters
-#   shared_theme=true   # concurrent sessions draw from the same theme
+#   enabled=true          # all new sessions become characters
+#   shared_theme=true     # concurrent sessions draw from the same theme
+#   shared_character=true # concurrent sessions are the exact same character
 conf="$HOME/.claude/masquerade.conf"
 get() { grep -s "^$1=" "$conf" | tail -1 | cut -d= -f2; }
 [ "$(get enabled)" = "true" ] || exit 0
@@ -19,18 +20,24 @@ claude_count() {
     fi
 }
 
-if [ "$(get shared_theme)" = "true" ]; then
-    themefile="$HOME/.claude/masquerade-theme"
-    # Reuse the stored theme while other sessions run (this session already counts as 1).
-    if [ "$(claude_count)" -gt 1 ] && [ -s "$themefile" ]; then
-        theme=$(cat "$themefile")
+roll() { grep -v '^#' "$roster" | grep -v '^[[:space:]]*$' | shuf -n 1; }
+
+shared_c="$(get shared_character)"
+if [ "$shared_c" = "true" ] || [ "$(get shared_theme)" = "true" ]; then
+    state="$HOME/.claude/masquerade-pick"
+    # Reuse the stored pick while other sessions run (this session already counts as 1).
+    if [ "$(claude_count)" -gt 1 ] && [ -s "$state" ]; then
+        line=$(cat "$state")
+        if [ "$shared_c" != "true" ]; then
+            # Shared theme only: keep the theme, reroll the character within it.
+            line=$(grep "^${line%%$'\t'*}$(printf '\t')" "$roster" | shuf -n 1)
+        fi
     else
-        theme=$(grep -v '^#' "$roster" | cut -f1 | sort -u | shuf -n 1)
-        echo "$theme" > "$themefile"
+        line=$(roll)
+        echo "$line" > "$state"
     fi
-    line=$(grep "^$theme$(printf '\t')" "$roster" | shuf -n 1)
 else
-    line=$(grep -v '^#' "$roster" | grep -v '^[[:space:]]*$' | shuf -n 1)
+    line=$(roll)
 fi
 
 theme="${line%%$'\t'*}"
