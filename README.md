@@ -45,6 +45,7 @@ shared_character=false
 | `enabled` | `true`/`false` | `false` | Master switch. When `true`, the SessionStart hook gives **every new session** a random character. When `false` (or the file is missing), the hook exits silently — `/character` still works on demand. |
 | `shared_theme` | `true`/`false` | `false` | While more than one claude process is running, new sessions keep the **theme** of the first one but roll their own character within it (three terminals → three different Norse gods). When the last claude process exits, the next session rerolls the theme. |
 | `shared_character` | `true`/`false` | `false` | Stronger version: concurrent sessions are the **exact same character** (three terminals → three Odins). Takes precedence over `shared_theme`, so setting both is fine. |
+| `intensity` | `full`/`light` | `full` | How hard the character leans in. `full`: persona voice and flavor in every response, all session. `light`: plain Claude with an occasional word, aside, or single sentence in the voice. |
 
 Command ↔ config mapping, if you'd rather not touch the file:
 
@@ -53,6 +54,7 @@ Command ↔ config mapping, if you'd rather not touch the file:
 | `/character on` / `off` | `enabled=true` / `false` |
 | `/character shared theme on` / `off` | `shared_theme=true` / `false` |
 | `/character shared character on` / `off` | `shared_character=true` / `false` |
+| `/character intensity full` / `light` | `intensity=full` / `light` |
 
 **State file:** shared modes remember the current pick in `~/.claude/masquerade-pick` (`theme<TAB>name`). It's managed automatically; delete it any time to force a fresh roll. **Note:** "concurrent" is detected by counting running `claude` processes, so the shared pick resets whenever no session is left running.
 

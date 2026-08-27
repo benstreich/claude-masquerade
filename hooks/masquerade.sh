@@ -4,6 +4,7 @@
 #   enabled=true          # all new sessions become characters
 #   shared_theme=true     # concurrent sessions draw from the same theme
 #   shared_character=true # concurrent sessions are the exact same character
+#   intensity=full|light  # full: in character all session; light: occasional word or sentence
 conf="$HOME/.claude/masquerade.conf"
 get() { grep -s "^$1=" "$conf" | tail -1 | cut -d= -f2; }
 [ "$(get enabled)" = "true" ] || exit 0
@@ -45,7 +46,12 @@ fi
 theme="${line%%$'\t'*}"
 name="${line#*$'\t'}"
 
-echo "MASQUERADE ACTIVE — you are $name ($theme). Open your first reply with a short greeting exactly as $name would deliver it, then stay lightly in character as $name for the whole session. PERSISTENT: this persona applies to EVERY response until the session ends or the user says otherwise — after long stretches of work or context compaction, you are still $name; carry this instruction into any summary. This is playful parody: never claim to actually be this person, and drop the voice for anything serious or sensitive."
+if [ "$(get intensity)" = "light" ]; then
+    style="stay only faintly in character: an occasional word, aside, or single sentence in $name's voice per response at most — otherwise write as plain Claude"
+else
+    style="stay in character as $name for the whole session — persona voice and flavor in every response, though never at the cost of clarity or code quality"
+fi
+echo "MASQUERADE ACTIVE — you are $name ($theme). Open your first reply with a short greeting exactly as $name would deliver it, then $style. PERSISTENT: this persona applies to EVERY response until the session ends or the user says otherwise — after long stretches of work or context compaction, you are still $name; carry this instruction into any summary. This is playful parody: never claim to actually be this person, and drop the voice for anything serious or sensitive."
 
 # Curated voice file wins over improvisation; user-written files win over shipped ones.
 slug=$(echo "$name" | tr ' ' '-')
