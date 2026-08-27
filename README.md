@@ -71,6 +71,24 @@ Command ↔ config mapping, if you'd rather not touch the file:
 
 Both are merged with the shipped roster automatically — your characters join the random-roll pool and always-on mode without forking the repo, and they survive plugin updates. User-local voice files override shipped ones of the same name. Everything there is hand-editable; the generated file is also PR-ready if you want to contribute it upstream.
 
+## Session names (launcher integration)
+
+Claude Code can only name a session at launch (`claude -n <name>`) or via the user-typed `/rename` — no hook can do it from inside. If you want sessions *named after* their character, wrap your launch: pick the character yourself, pass it as `-n`, and set **`MASQUERADE_CHARACTER`** — the hook then adopts exactly that figure (overriding all config, even `enabled=false`; unknown names get theme `custom`).
+
+PowerShell profile example:
+
+```powershell
+function claude {
+    $line = Get-Content "$HOME\.claude\plugins\<path-to>\characters\roster.tsv" | Where-Object { $_ -notmatch '^#' } | Get-Random
+    $name = ($line -split "`t")[1]
+    $env:MASQUERADE_CHARACTER = $name
+    & claude.exe -n $name @args
+    Remove-Item Env:MASQUERADE_CHARACTER
+}
+```
+
+Bash equivalent: `name=$(grep -v '^#' roster.tsv | shuf -n1 | cut -f2); MASQUERADE_CHARACTER=$name claude -n "$name"`.
+
 ## Contribute a character
 
 Copy [`characters/TEMPLATE.md`](characters/TEMPLATE.md) to `characters/<name-with-dashes>.md`, write the voice, add a `theme<TAB>name` line to `roster.tsv`, open a PR. Short is good — a voice file is a seasoning packet, not a biography.

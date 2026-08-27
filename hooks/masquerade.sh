@@ -7,7 +7,6 @@
 #   intensity=full|light  # full: in character all session; light: occasional word or sentence
 conf="$HOME/.claude/masquerade.conf"
 get() { grep -s "^$1=" "$conf" | tail -1 | cut -d= -f2; }
-[ "$(get enabled)" = "true" ] || exit 0
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 userdir="$HOME/.claude/masquerade"
@@ -25,8 +24,15 @@ claude_count() {
 
 roll() { rosters | grep -v '^#' | grep -v '^[[:space:]]*$' | shuf -n 1; }
 
-shared_c="$(get shared_character)"
-if [ "$shared_c" = "true" ] || [ "$(get shared_theme)" = "true" ]; then
+# Launcher integration: a wrapper that names the session (claude -n <name>) sets
+# MASQUERADE_CHARACTER to force the same character here. Overrides everything, even enabled=.
+if [ -n "$MASQUERADE_CHARACTER" ]; then
+    name="$MASQUERADE_CHARACTER"
+    theme=$(rosters | awk -F'\t' -v n="$name" 'tolower($2)==tolower(n){print $1; exit}')
+    line="${theme:-custom}$(printf '\t')$name"
+elif [ "$(get enabled)" != "true" ]; then
+    exit 0
+elif shared_c="$(get shared_character)"; [ "$shared_c" = "true" ] || [ "$(get shared_theme)" = "true" ]; then
     state="$HOME/.claude/masquerade-pick"
     # Reuse the stored pick while other sessions run (this session already counts as 1).
     if [ "$(claude_count)" -gt 1 ] && [ -s "$state" ]; then
