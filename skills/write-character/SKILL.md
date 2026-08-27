@@ -20,4 +20,4 @@ Forge a curated voice file from a name (`/write-character gordon ramsay`) or a d
 ## Rosters
 
 - Shipped: `../../characters/roster.tsv` (relative to this skill's base directory)
-- User-local: `~/.claude/masquerade/roster.tsv` — same tab-separated format; both are merged by the hook and `/character`.
+- User-local: `~/.claude/masquerade/roster.tsv` — same tab-separated format; both are merged by the hook and `/masquerade`.
