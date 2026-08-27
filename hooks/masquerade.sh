@@ -52,6 +52,12 @@ fi
 theme="${line%%$'\t'*}"
 name="${line#*$'\t'}"
 
+# Register the pick for the per-prompt reminder hook (remind.sh); sid comes from hook stdin.
+mkdir -p "$userdir"
+find "$userdir" -name 'active-*' -mtime +7 -delete 2>/dev/null
+sid=$(sed -n 's/.*"session_id" *: *"\([^"]*\)".*/\1/p' | head -1)
+[ -n "$sid" ] && printf '%s' "$name" > "$userdir/active-$sid"
+
 if [ "$(get intensity)" = "light" ]; then
     style="stay only faintly in character: an occasional word, aside, or single sentence in $name's voice per response at most — otherwise write as plain Claude"
 else

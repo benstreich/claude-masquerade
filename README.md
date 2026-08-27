@@ -99,3 +99,4 @@ Copy [`characters/TEMPLATE.md`](characters/TEMPLATE.md) to `characters/<name-wit
 - `/summon` is a plugin skill that reads the roster and adopts the persona.
 - Always-on mode is a `SessionStart` hook that injects the persona when `enabled=true` in `~/.claude/masquerade.conf` — and exits silently otherwise.
 - Shared modes store the current pick in `~/.claude/masquerade-pick` and reuse it while other claude processes are running; when the last one exits, the next session rerolls.
+- A `UserPromptSubmit` hook whispers a one-line "you are still X" reminder with every message while a persona is active, so characters survive long sessions and context compaction instead of quietly fading.
