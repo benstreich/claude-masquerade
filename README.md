@@ -26,7 +26,7 @@ Give your Claude Code sessions a soul. Summon famous figures — gods, scientist
 | `/masquerade shared character on` | Concurrent sessions are the exact same character — three terminals, three Odins |
 | `/masquerade shared ... off` | Every session rolls independently again |
 | `/masquerade tweak <description>` | Reshape the current character mid-session — "more sarcastic", "less metaphors", "speak german". Instant, stackable, session-only unless you say "save that" (then it's folded into the character's user-local voice file) |
-| `/write-summoner <name or description>` | Claude writes a new curated character for you — see below |
+| `/write-summon <name or description>` | Claude writes a new curated character for you — see below |
 
 Always-on mode is opt-in — installing the plugin changes nothing until you say `/masquerade on`. See [Configuration](#configuration) for all settings.
 
@@ -65,7 +65,7 @@ Command ↔ config mapping, if you'd rather not touch the file:
 
 ## Write your own characters
 
-`/write-summoner gordon ramsay` — or `/write-summoner a grumpy 1970s unix greybeard` — makes Claude write a full voice file in the template format and save it **user-locally**:
+`/write-summon gordon ramsay` — or `/write-summon a grumpy 1970s unix greybeard` — makes Claude write a full voice file in the template format and save it **user-locally**:
 
 - Voice file: `~/.claude/masquerade/characters/<name-with-dashes>.md`
 - Roster line: `~/.claude/masquerade/roster.tsv` (same `theme<TAB>name` format)

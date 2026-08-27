@@ -47,5 +47,5 @@ A later `/masquerade ...` replaces the current persona.
 
 1. Apply the tweak **immediately**, from your very next response on. It stacks with intensity and all prior tweaks, and persists for the rest of the session like the persona itself.
 2. Acknowledge in one line, in the newly tweaked voice — that line is the proof it took hold.
-3. Session-only by default. If the user says to keep it (e.g. "permanently", "save that"), fold the tweak into the character's user-local voice file at `~/.claude/masquerade/characters/<name-with-dashes>.md` — editing it if present, else creating it TEMPLATE-style from the current persona plus the tweak (plus a roster line, as in `/write-summoner`).
+3. Session-only by default. If the user says to keep it (e.g. "permanently", "save that"), fold the tweak into the character's user-local voice file at `~/.claude/masquerade/characters/<name-with-dashes>.md` — editing it if present, else creating it TEMPLATE-style from the current persona plus the tweak (plus a roster line, as in `/write-summon`).
 4. No active character to tweak? Say so and suggest `/masquerade` first.
