@@ -1,11 +1,11 @@
 ---
-name: write-persona
-description: Write a new curated character voice file. Use when the user says /write-persona, "write me a character", "create a persona", or describes a figure they want added to the masquerade roster. Takes a name or a free-form description.
+name: write-summoner
+description: Write a new curated character voice file. Use when the user says /write-summoner, "write me a character", "create a persona", or describes a figure they want added to the masquerade roster. Takes a name or a free-form description.
 ---
 
 # Write Character
 
-Forge a curated voice file from a name (`/write-persona gordon ramsay`) or a description (`/write-persona a grumpy 1970s unix greybeard`).
+Forge a curated voice file from a name (`/write-summoner gordon ramsay`) or a description (`/write-summoner a grumpy 1970s unix greybeard`).
 
 ## Steps
 
