@@ -1,5 +1,7 @@
 # claude-masquerade
 
+## 🤖 100% CLAUDE GENERATED
+
 Give your Claude Code sessions a soul. Summon famous figures — gods, scientists, politicians, pundits — as light session personas: they greet you in voice, stay lightly in character, and still write perfectly serious code.
 
 > ⚠️ **This is parody/entertainment.** Characters are playful impressions, not the real people. The plugin never claims to be them and never fabricates their actual statements.
