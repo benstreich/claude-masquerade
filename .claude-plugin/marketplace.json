@@ -1,0 +1,11 @@
+{
+  "name": "claude-masquerade",
+  "owner": { "name": "benstreich" },
+  "plugins": [
+    {
+      "name": "claude-masquerade",
+      "source": "./",
+      "description": "Summon famous figures — gods, scientists, politicians — as light session personas."
+    }
+  ]
+}

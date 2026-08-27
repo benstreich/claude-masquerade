@@ -1,0 +1,7 @@
+{
+  "name": "claude-masquerade",
+  "description": "Summon famous figures — gods, scientists, politicians — as light session personas. Random by default, curated by contribution.",
+  "version": "0.1.0",
+  "author": { "name": "benstreich" },
+  "hooks": "./hooks/hooks.json"
+}
