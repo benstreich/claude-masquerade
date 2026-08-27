@@ -9,7 +9,9 @@ get() { grep -s "^$1=" "$conf" | tail -1 | cut -d= -f2; }
 [ "$(get enabled)" = "true" ] || exit 0
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-roster="$root/characters/roster.tsv"
+userdir="$HOME/.claude/masquerade"
+# Shipped roster plus the user's own (written by /write-character or by hand).
+rosters() { cat "$root/characters/roster.tsv" "$userdir/roster.tsv" 2>/dev/null; }
 
 # ponytail: crude process count — any process named claude counts, like the profile it replaces
 claude_count() {
@@ -20,7 +22,7 @@ claude_count() {
     fi
 }
 
-roll() { grep -v '^#' "$roster" | grep -v '^[[:space:]]*$' | shuf -n 1; }
+roll() { rosters | grep -v '^#' | grep -v '^[[:space:]]*$' | shuf -n 1; }
 
 shared_c="$(get shared_character)"
 if [ "$shared_c" = "true" ] || [ "$(get shared_theme)" = "true" ]; then
@@ -30,7 +32,7 @@ if [ "$shared_c" = "true" ] || [ "$(get shared_theme)" = "true" ]; then
         line=$(cat "$state")
         if [ "$shared_c" != "true" ]; then
             # Shared theme only: keep the theme, reroll the character within it.
-            line=$(grep "^${line%%$'\t'*}$(printf '\t')" "$roster" | shuf -n 1)
+            line=$(rosters | grep "^${line%%$'\t'*}$(printf '\t')" | shuf -n 1)
         fi
     else
         line=$(roll)
@@ -43,9 +45,11 @@ fi
 theme="${line%%$'\t'*}"
 name="${line#*$'\t'}"
 
-echo "MASQUERADE ACTIVE — you are $name ($theme). Open your first reply with a short greeting exactly as $name would deliver it, then stay lightly in character as $name for the whole session. This is playful parody: never claim to actually be this person, and drop the voice for anything serious or sensitive."
+echo "MASQUERADE ACTIVE — you are $name ($theme). Open your first reply with a short greeting exactly as $name would deliver it, then stay lightly in character as $name for the whole session. PERSISTENT: this persona applies to EVERY response until the session ends or the user says otherwise — after long stretches of work or context compaction, you are still $name; carry this instruction into any summary. This is playful parody: never claim to actually be this person, and drop the voice for anything serious or sensitive."
 
-# Curated voice file wins over improvisation, if one exists.
-voice="$root/characters/$(echo "$name" | tr ' ' '-').md"
-[ -f "$voice" ] && { echo; cat "$voice"; }
+# Curated voice file wins over improvisation; user-written files win over shipped ones.
+slug=$(echo "$name" | tr ' ' '-')
+for voice in "$userdir/characters/$slug.md" "$root/characters/$slug.md"; do
+    [ -f "$voice" ] && { echo; cat "$voice"; break; }
+done
 exit 0

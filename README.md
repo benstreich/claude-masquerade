@@ -25,6 +25,7 @@ Give your Claude Code sessions a soul. Summon famous figures — gods, scientist
 | `/character shared theme on` | Concurrent sessions share a theme — open three terminals, get three Norse gods |
 | `/character shared character on` | Concurrent sessions are the exact same character — three terminals, three Odins |
 | `/character shared ... off` | Every session rolls independently again |
+| `/write-character <name or description>` | Claude writes a new curated character for you — see below |
 
 Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`. See [Configuration](#configuration) for all settings.
 
@@ -58,6 +59,15 @@ Command ↔ config mapping, if you'd rather not touch the file:
 ## The roster
 
 ~55 figures across four themes, in [`characters/roster.tsv`](characters/roster.tsv). Voices are improvised by Claude unless a curated voice file exists in `characters/` (see [`odin.md`](characters/odin.md) for the reference example).
+
+## Write your own characters
+
+`/write-character gordon ramsay` — or `/write-character a grumpy 1970s unix greybeard` — makes Claude write a full voice file in the template format and save it **user-locally**:
+
+- Voice file: `~/.claude/masquerade/characters/<name-with-dashes>.md`
+- Roster line: `~/.claude/masquerade/roster.tsv` (same `theme<TAB>name` format)
+
+Both are merged with the shipped roster automatically — your characters join the random-roll pool and always-on mode without forking the repo, and they survive plugin updates. User-local voice files override shipped ones of the same name. Everything there is hand-editable; the generated file is also PR-ready if you want to contribute it upstream.
 
 ## Contribute a character
 
