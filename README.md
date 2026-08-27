@@ -25,6 +25,7 @@ Give your Claude Code sessions a soul. Summon famous figures — gods, scientist
 | `/character shared theme on` | Concurrent sessions share a theme — open three terminals, get three Norse gods |
 | `/character shared character on` | Concurrent sessions are the exact same character — three terminals, three Odins |
 | `/character shared ... off` | Every session rolls independently again |
+| `/character tweak <description>` | Reshape the current character mid-session — "more sarcastic", "less metaphors", "speak german". Instant, stackable, session-only unless you say "save that" (then it's folded into the character's user-local voice file) |
 | `/write-character <name or description>` | Claude writes a new curated character for you — see below |
 
 Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`. See [Configuration](#configuration) for all settings.

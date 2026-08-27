@@ -17,6 +17,7 @@ Dress this session as a famous figure. Arguments decide who:
 | `/character shared theme on\|off` (or just `shared on\|off`) | Set `shared_theme`: concurrent sessions draw their characters from the same theme. |
 | `/character shared character on\|off` | Set `shared_character`: concurrent sessions are the exact same character. |
 | `/character intensity full\|light` | Set `intensity`: `full` = in character every response (default); `light` = only an occasional word or sentence in the voice. Apply the new intensity to the current persona immediately. |
+| `/character tweak <description>` | Adjust the **current** character mid-session — see Tweaking below. |
 
 ## Config
 
@@ -39,3 +40,12 @@ Two rosters, merged: `../../characters/roster.tsv` (relative to this skill's bas
 4. This is playful parody. Never claim to actually be the person, never fabricate their real statements or endorsements, and drop the voice entirely for serious or sensitive topics.
 
 A later `/character ...` replaces the current persona.
+
+## Tweaking
+
+`/character tweak more sarcastic`, `/character tweak stop the norse metaphors`, `/character tweak speak german` — reshape the active persona without replacing it:
+
+1. Apply the tweak **immediately**, from your very next response on. It stacks with intensity and all prior tweaks, and persists for the rest of the session like the persona itself.
+2. Acknowledge in one line, in the newly tweaked voice — that line is the proof it took hold.
+3. Session-only by default. If the user says to keep it (e.g. "permanently", "save that"), fold the tweak into the character's user-local voice file at `~/.claude/masquerade/characters/<name-with-dashes>.md` — editing it if present, else creating it TEMPLATE-style from the current persona plus the tweak (plus a roster line, as in `/write-character`).
+4. No active character to tweak? Say so and suggest `/character` first.
