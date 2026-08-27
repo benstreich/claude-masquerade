@@ -1,11 +1,38 @@
 #!/usr/bin/env bash
 # SessionStart hook: dresses the session as a random character from the roster.
-# ponytail: opt-in via flag file — exits silently unless /character on was used.
-flag="$HOME/.claude/masquerade-on"
-[ -f "$flag" ] || exit 0
+# Config: ~/.claude/masquerade.conf, key=value lines:
+#   enabled=true        # all new sessions become characters
+#   shared_theme=true   # concurrent sessions draw from the same theme
+conf="$HOME/.claude/masquerade.conf"
+get() { grep -s "^$1=" "$conf" | tail -1 | cut -d= -f2; }
+[ "$(get enabled)" = "true" ] || exit 0
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-line=$(grep -v '^#' "$root/characters/roster.tsv" | grep -v '^[[:space:]]*$' | shuf -n 1)
+roster="$root/characters/roster.tsv"
+
+# ponytail: crude process count — any process named claude counts, like the profile it replaces
+claude_count() {
+    if command -v tasklist >/dev/null 2>&1; then
+        tasklist 2>/dev/null | grep -ci '^claude'
+    else
+        pgrep -cx claude 2>/dev/null || echo 0
+    fi
+}
+
+if [ "$(get shared_theme)" = "true" ]; then
+    themefile="$HOME/.claude/masquerade-theme"
+    # Reuse the stored theme while other sessions run (this session already counts as 1).
+    if [ "$(claude_count)" -gt 1 ] && [ -s "$themefile" ]; then
+        theme=$(cat "$themefile")
+    else
+        theme=$(grep -v '^#' "$roster" | cut -f1 | sort -u | shuf -n 1)
+        echo "$theme" > "$themefile"
+    fi
+    line=$(grep "^$theme$(printf '\t')" "$roster" | shuf -n 1)
+else
+    line=$(grep -v '^#' "$roster" | grep -v '^[[:space:]]*$' | shuf -n 1)
+fi
+
 theme="${line%%$'\t'*}"
 name="${line#*$'\t'}"
 

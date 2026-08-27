@@ -22,8 +22,10 @@ Give your Claude Code sessions a soul. Summon famous figures — gods, scientist
 | `/character odin` | A specific figure — any name works, roster or not |
 | `/character on` | **Always-on mode**: every new session starts as a random character |
 | `/character off` | Back to plain Claude |
+| `/character shared on` | Concurrent sessions share a theme — open three terminals, get three Norse gods |
+| `/character shared off` | Every session rolls independently |
 
-Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`.
+Always-on mode is opt-in — installing the plugin changes nothing until you say `/character on`. Settings live in `~/.claude/masquerade.conf` (`enabled=true`, `shared_theme=true`), editable by hand too.
 
 ## The roster
 
@@ -36,4 +38,5 @@ Copy [`characters/TEMPLATE.md`](characters/TEMPLATE.md) to `characters/<name-wit
 ## How it works
 
 - `/character` is a plugin skill that reads the roster and adopts the persona.
-- Always-on mode is a `SessionStart` hook that injects the persona when the flag file `~/.claude/masquerade-on` exists — and exits silently when it doesn't.
+- Always-on mode is a `SessionStart` hook that injects the persona when `enabled=true` in `~/.claude/masquerade.conf` — and exits silently otherwise.
+- Shared-theme mode stores the current theme in `~/.claude/masquerade-theme` and reuses it while other claude processes are running; when the last one exits, the next session rerolls the theme.
